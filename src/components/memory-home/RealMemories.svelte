@@ -13,7 +13,7 @@ import {
 import { authState } from "@/lib/auth/state";
 import { getMemoryDetailHref } from "@/lib/memory/detail-href";
 import { perfNavMark } from "@/lib/memory/perf-nav";
-import { revealPhotoFallback } from "@/lib/memory/photo-fallback";
+import MemoryCover from "./MemoryCover.svelte";
 import {
 	createMemoryPhotoSignedUrls,
 	loadSpaceData,
@@ -26,6 +26,7 @@ let memories: Memory[] = [];
 let signedUrlsByPath = new Map<string, string>();
 let loading = true;
 let signingPhotos = false;
+let photoRequestVersion = 0;
 let errorMessage = "";
 let loadedSpaceId: string | null = null;
 let signedPathsKey = "";
@@ -178,6 +179,7 @@ async function reloadMemoriesPage() {
 }
 
 async function reloadVisiblePhotoSignedUrls(paths: string[], nextKey: string) {
+	const version = ++photoRequestVersion;
 	if (paths.length === 0) {
 		signedUrlsByPath = new Map();
 		signedPathsKey = nextKey;
@@ -193,10 +195,12 @@ async function reloadVisiblePhotoSignedUrls(paths: string[], nextKey: string) {
 	});
 
 	try {
-		signedUrlsByPath = await createMemoryPhotoSignedUrls(
+		const urls = await createMemoryPhotoSignedUrls(
 			getSupabaseClient(),
 			paths,
 		);
+		if (destroyed || version !== photoRequestVersion) return;
+		signedUrlsByPath = new Map([...signedUrlsByPath, ...urls]);
 		perfNavMark("signed urls end", {
 			page: "memories",
 			count: signedUrlsByPath.size,
@@ -211,7 +215,7 @@ async function reloadVisiblePhotoSignedUrls(paths: string[], nextKey: string) {
 			});
 		}
 	} finally {
-		signingPhotos = false;
+		if (version === photoRequestVersion) signingPhotos = false;
 	}
 }
 
@@ -419,24 +423,9 @@ function getPerspectiveStatus(memory: Memory) {
 		class="memory-real-card"
 		data-memory-id={memory.id}
 	>
-		<div class="memory-real-card__photo" class:is-empty={!coverUrl}>
-			{#if coverUrl}
-				<img
-					alt={memory.title ?? memory.location ?? "生活照片"}
-					decoding="async"
-					height={memory.photos[0]?.height ?? undefined}
-					loading="lazy"
-					on:error={(event) => revealPhotoFallback(event.currentTarget)}
-					src={coverUrl}
-					width={memory.photos[0]?.width ?? undefined}
-				/>
-				<span class="memory-photo-fallback" hidden
-					>{memory.photos.length > 0 ? "照片暂时无法加载" : "还没有照片"}</span
-				>
-			{:else}
-				<span>{memory.photos.length > 0 ? "照片暂时无法加载" : "还没有照片"}</span>
-			{/if}
-		</div>
+		{#key memory.photos[0]?.storagePath ?? memory.id}
+			<MemoryCover path={memory.photos[0]?.storagePath ?? null} url={coverUrl} signing={signingPhotos} alt={memory.title ?? memory.location ?? "生活照片"} />
+		{/key}
 		<div class="memory-real-card__body">
 			<p>{getMemoryMeta(memory)}</p>
 			<h3>{getMemorySummary(memory)}</h3>

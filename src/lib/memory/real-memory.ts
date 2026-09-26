@@ -229,6 +229,7 @@ export function loadSpaceData(supabase: BrowserSupabaseClient, spaceId: string, 
 export async function createMemoryPhotoSignedUrls(
 	supabase: BrowserSupabaseClient,
 	storagePaths: string[],
+	forceRefresh = false,
 ): Promise<Map<string, string>> {
 	const paths = [...new Set(storagePaths.filter(Boolean))];
 
@@ -237,7 +238,7 @@ export async function createMemoryPhotoSignedUrls(
 	}
 
 	const startedEpoch = currentCacheEpoch();
-	const { urls, missing } = getCachedSignedUrls(paths);
+	const { urls, missing } = forceRefresh ? { urls: new Map<string, string>(), missing: paths } : getCachedSignedUrls(paths);
 
 	if (missing.length > 0) {
 		photoDebug("visible signed urls request", {
