@@ -40,7 +40,7 @@ function setup() {
     modules.set(name,module.exports);
     return module.exports;
   }
-  return {footprints:load('@/lib/memory/footprints'),locations:load('@/lib/memory/locations'),mapper:load('@/lib/memory/mapper'),cache:load('@/lib/memory/cache'),api:load('@/lib/memory/real-memory'),auth,change:()=>invalidation.notifySpaceChanged('space'),advance:ms=>time+=ms};
+  return {recollections:load('@/lib/memory/recollections'),footprints:load('@/lib/memory/footprints'),locations:load('@/lib/memory/locations'),mapper:load('@/lib/memory/mapper'),cache:load('@/lib/memory/cache'),api:load('@/lib/memory/real-memory'),auth,change:()=>invalidation.notifySpaceChanged('space'),advance:ms=>time+=ms};
 }
 function deferred() { let resolve;const promise=new Promise(r=>resolve=r);return {promise,resolve}; }
 function client(execute, storage = {}) {
@@ -203,4 +203,26 @@ test('travel album keeps custom and missing places readable and places pins on t
  assert.equal(groups.length,4);assert.equal(groups.at(-1).pending,true);assert.equal(groups.find(g=>g.location==='家里').coordinates,null);
  for(const group of groups.filter(g=>g.coordinates)){assert.equal(group.x,50);assert.ok(Number.isFinite(group.y));}
  assert.equal(footprints.buildFootprints([]).length,0);
+});
+
+
+test('old-letter filters use saved moods, distinct authors and actual photos',()=>{
+ const {recollections:r,mapper}=setup();
+ const memory=mapper.mapMemory({...row('one'),perspectives:[{user_id:'a',mood:' 开心 ',content:'A'},{user_id:'b',mood:'开心',content:'B'}],memory_photos:[{id:'photo'}]});
+ assert.equal(r.memoryMoods(memory).length,1);
+ assert.equal(r.filterRecollections([memory],'both','开心').length,1);
+ assert.equal(r.filterRecollections([memory],'photos','开心').length,1);
+ assert.equal(r.filterRecollections([memory],'all','想念').length,0);
+ const duplicate={...memory,perspectives:memory.perspectives.map(p=>({...p,userId:'a'}))};
+ assert.equal(r.filterRecollections([duplicate],'both','').length,0);
+});
+
+test('draw letters without repeats until a complete round, and avoid repeating across rounds',()=>{
+ const {recollections:r}=setup();const items=[{id:'a'},{id:'b'},{id:'c'}];let current=null,seen=[];const ids=[];
+ for(let i=0;i<3;i++){const next=r.drawRecollection(items,current,seen,()=>0);current=next.id;seen=next.seen;ids.push(current);}
+ assert.equal(new Set(ids).size,3);
+ const next=r.drawRecollection(items,current,seen,()=>0);assert.notEqual(next.id,current);assert.equal(next.seen.length,1);
+ assert.equal(r.drawRecollection([],null,[]).id,null);
+ assert.equal(r.drawRecollection([{id:'a'}],'a',['a']).id,'a');
+ assert.equal(r.drawRecollection([{id:'b'}],'a',['a']).id,'b');
 });
