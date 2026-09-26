@@ -1,4 +1,5 @@
 <script lang="ts">
+import { findCity } from "@/lib/memory/locations";
 import { onDestroy, onMount } from "svelte";
 import { get } from "svelte/store";
 
@@ -189,6 +190,8 @@ function groupMapMemories(items: Memory[]) {
 
 		const latitude = memory.coordinates.latitude;
 		const longitude = memory.coordinates.longitude;
+		const city = findCity(memory.location);
+		const atCityCenter = city && Math.abs(city.latitude - latitude) < 0.00001 && Math.abs(city.longitude - longitude) < 0.00001;
 		const key = `${latitude.toFixed(4)}:${longitude.toFixed(4)}`;
 		const existing = groups.get(key);
 
@@ -200,7 +203,7 @@ function groupMapMemories(items: Memory[]) {
 		groups.set(key, {
 			key,
 			latitude,
-			location: memory.location ?? "未命名地点",
+			location: atCityCenter ? city.name : memory.location ?? "未命名地点",
 			longitude,
 			memories: [memory],
 		});
@@ -292,13 +295,14 @@ function getPerspectiveStatus(memory: Memory) {
 		<div
 			class:is-empty={mapGroups.length === 0}
 			class="memory-map-canvas memory-map-canvas--real"
-			aria-label="真实回忆地点地图"
+			aria-label="我们的足迹示意图"
 		>
 			<div class="memory-map-canvas__watermark">OUR<br />PLACES</div>
+			<p class="journal-map-note">足迹示意 · 城市标记为大致位置</p>
 			{#if mapGroups.length === 0}
 				<div class="memory-map-empty">
 					<h2>这些记忆还没有留下地图位置。</h2>
-					<span>留下过位置的记忆越来越多后，地图会慢慢亮起来。</span>
+					<span>编辑一条记录，选择它发生的城市，就能点亮第一处足迹。</span>
 				</div>
 			{:else}
 				{#each mapGroups as group}
@@ -372,7 +376,7 @@ function getPerspectiveStatus(memory: Memory) {
 			{:else}
 				<div class="memory-map-aside-empty">
 					<h2>有些记忆还没有保存地图位置。</h2>
-					<p>已经有 {memories.length} 段记忆，只是还没有留下具体位置。</p>
+					<p>已经有 {memories.length} 段记忆。在记录中选择城市，就能把它们放上地图。</p>
 				</div>
 			{/if}
 		</aside>

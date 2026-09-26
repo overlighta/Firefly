@@ -1,4 +1,5 @@
 <script lang="ts">
+import LocationPicker from "./LocationPicker.svelte";
 import { onDestroy, onMount } from "svelte";
 import { get } from "svelte/store";
 
@@ -730,6 +731,11 @@ function getPhotoPipelineStage(error: unknown) {
 		<button type="button" on:click={openDialog}>记录今天</button>
 	</section>
 {:else}
+	<header class="journal-collection">
+		<div><p>OUR EVERYDAY COLLECTION <span>· 生活收藏册</span></p><h1 id="today-title">把平常的日子，<br />收藏成<span>我们。</span></h1><span class="journal-collection__note">照片贴好，心情写下。今天也值得留一页。</span></div>
+		<a class="journal-collection__stamp" href="/space/" aria-label="查看我们的收藏"><span>两人共同收藏</span><strong>{memories.length.toString().padStart(2, "0")}</strong><span>页生活 · 持续装订中</span></a>
+	</header>
+	<div class="journal-chapter"><span>01 / 最新一页</span><span>{heroMemory.title || "留住这一刻"}</span></div>
 	<section class="memory-today" aria-labelledby="today-title">
 		<div class="memory-today__main">
 			<div class="memory-day">
@@ -880,7 +886,7 @@ function getPhotoPipelineStage(error: unknown) {
 
 	<section class="memory-recent" aria-labelledby="recent-title">
 		<header class="memory-section-header">
-			<div><p>最近的我们</p><h2>最近记录</h2></div>
+			<div><p>02 / 散落的好时光</p><h2>最近记录</h2></div><a class="journal-text-link" href="/timeline/">翻阅整本手记 ↗</a>
 		</header>
 		{#if recentMemories.length === 0}
 			<p class="memory-real-inline-empty">目前只有这一条记录。继续写，最近记录会慢慢长出来。</p>
@@ -972,10 +978,8 @@ function getPhotoPipelineStage(error: unknown) {
 			<span>标题，可选</span>
 			<input bind:value={title} placeholder="例如：晚饭后的散步" />
 		</label>
-		<div class="memory-dialog__grid">
-			<label><span>地点</span><div><span>📍</span><input bind:value={location} /></div></label>
-			<label><span>日期</span><div><span>📅</span><input bind:value={date} type="date" required /></div></label>
-		</div>
+		<label><span>日期</span><input bind:value={date} type="date" required /></label>
+		<LocationPicker bind:value={location} recent={memories.map(item => item.location ?? "")} />
 		<p class="memory-dialog__hint">
 			这一页会以你的视角记录，对方也有属于自己的视角。
 		</p>

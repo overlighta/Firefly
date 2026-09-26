@@ -1,4 +1,5 @@
 import type { Database } from "@/types/database";
+import { cityCoordinates } from "@/lib/memory/locations";
 import type {
 	Memory,
 	MemoryPhoto,
@@ -120,7 +121,7 @@ export function mapMemory(row: MemoryRecord): Memory {
 					latitude: row.latitude as number,
 					longitude: row.longitude as number,
 				}
-			: null,
+			: cityCoordinates(row.location),
 		createdAt: row.created_at,
 		createdBy: row.created_by,
 		date: row.memory_date,

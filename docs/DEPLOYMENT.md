@@ -4,11 +4,11 @@
 
 ## 本次发布进度
 
-- 已确认 GitHub 仓库为 `overlighta/Firefly`，默认分支为 `master`；新版使用独立发布分支 `codex/deploy-private-journal`；Cloudflare 创建项目时选择此分支，`master` 仍是旧版本。
-- 已确认 `together0624lyx.com` 的权威 DNS 由 Cloudflare 管理；这不代表网站源站一定在 Cloudflare，仍需核对托管平台。
-- 本地公开连接配置齐全，浏览器使用的是 Supabase publishable key。源码上传范围和现有构建均通过本地密钥检查，环境文件、测试账号文件及本地初始化 SQL 已排除。
-- 用户补充旧站可能部署于 Cloudflare；历史仓库存在名为 `firefly` 的 Workers 静态资源配置，但尚未确认线上项目是 Workers 还是 Pages。
-- 当前方案：用户决定不再追查旧项目，创建 Cloudflare Pages 项目并连接 GitHub；配置公开变量，验收平台地址后再绑定域名。不得把上述准备检查视为已经上线。
+- GitHub 仓库：`overlighta/Firefly`；生产分支：`codex/deploy-private-journal`。`master` 仍为旧版本，不应选为生产分支。
+- Cloudflare Pages 项目已连接 GitHub，推送生产分支会自动构建发布。平台地址：https://firefly-i7p.pages.dev 。
+- 正式域名：https://together0624lyx.com 。域名在 Spaceship 续费，DNS 已交由当前 Cloudflare 账号的 dion/jill 名称服务器管理；根域名 CNAME 指向 Pages 项目。
+- 浏览器使用 Supabase publishable key；环境文件、测试账号文件及本地初始化 SQL 不上传。构建会检查输出是否包含本地密钥。
+- 本轮手帐与城市选择改版保持相同部署架构，无新增环境变量、SQL 迁移或付费接口。
 
 ## 推荐方案
 

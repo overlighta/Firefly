@@ -212,7 +212,7 @@ function getMemberColor(index: number) {
 			<article>
 				<span>03</span>
 				<h3>地点慢慢连成地图</h3>
-				<p>留下过坐标的日子，会在我们的地图上一点一点亮起来。</p>
+				<p>记录时选一座城市，我们的足迹就会在地图上一点一点亮起来。</p>
 			</article>
 		</div>
 		<footer>

@@ -1,4 +1,5 @@
 <script lang="ts">
+import LocationPicker from "./LocationPicker.svelte";
 import { onDestroy, onMount } from "svelte";
 import { navigate } from "@/lib/navigation";
 import { get } from "svelte/store";
@@ -671,10 +672,6 @@ function getTime(value: string) {
 	}).format(new Date(value));
 }
 
-function formatCoordinate(value: number) {
-	return value.toFixed(4);
-}
-
 function getMemorySummary(target: Memory | null) {
 	if (!target) return "这段记录";
 
@@ -888,8 +885,7 @@ function getPhotoPipelineStage(error: unknown) {
 			<li><span>🎵</span>{getSongText(memory)}</li>
 			{#if memory.coordinates}
 				<li>
-					<span>🗺️</span
-					>{formatCoordinate(memory.coordinates.latitude)}, {formatCoordinate(memory.coordinates.longitude)}
+					<span>🗺️</span><a href="/map/">已收进我们的足迹 ↗</a>
 				</li>
 			{/if}
 			<li><span>📷</span>{memory.photos.length} 张照片</li>
@@ -1023,11 +1019,8 @@ function getPhotoPipelineStage(error: unknown) {
 		</header>
 		<label><span>日期</span><input bind:value={editDate} type="date" required /></label>
 		<label><span>标题，可选</span><input bind:value={editTitle} placeholder="例如：晚饭后的散步" /></label>
-		<label><span>地点，可选</span><input bind:value={editLocation} placeholder="例如：江边" /></label>
-		<div class="memory-dialog__grid">
-			<label><span>纬度，可选</span><input bind:value={editLatitude} inputmode="decimal" placeholder="30.0000" /></label>
-			<label><span>经度，可选</span><input bind:value={editLongitude} inputmode="decimal" placeholder="120.0000" /></label>
-		</div>
+		<LocationPicker bind:value={editLocation} bind:latitude={editLatitude} bind:longitude={editLongitude} />
+		<details class="journal-optional"><summary>再添一点细节 · 天气、音乐与备注</summary>
 		<div class="memory-dialog__grid">
 			<label><span>天气，可选</span><input bind:value={editWeather} placeholder="例如：多云" /></label>
 			<label><span>气温，可选</span><input bind:value={editTemperature} placeholder="例如：26°C" /></label>
@@ -1037,6 +1030,7 @@ function getPhotoPipelineStage(error: unknown) {
 			<label><span>歌手，可选</span><input bind:value={editSongArtist} placeholder="歌手" /></label>
 		</div>
 		<label><span>备注，可选</span><textarea bind:value={editNote} rows="3" placeholder="补充一句…"></textarea></label>
+		</details>
 		<p class="memory-dialog__hint">
 			共享字段由两个人共同维护。你们的视角始终只能各自编辑。
 		</p>

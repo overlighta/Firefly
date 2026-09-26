@@ -370,6 +370,7 @@ function getPerspectiveStatus(memory: Memory) {
 	</section>
 {:else}
 	<div class="memory-real-archive" aria-busy={signingPhotos}>
+		{#if onThisDayMemories.length > 0}
 		<section class="memory-archive-feature">
 			<header>
 				<h2>去年今日</h2>
@@ -384,6 +385,7 @@ function getPerspectiveStatus(memory: Memory) {
 				</div>
 			{/if}
 		</section>
+		{/if}
 
 		<section class="memory-archive-feature">
 			<header>

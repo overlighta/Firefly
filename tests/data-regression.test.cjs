@@ -40,7 +40,7 @@ function setup() {
     modules.set(name,module.exports);
     return module.exports;
   }
-  return {cache:load('@/lib/memory/cache'),api:load('@/lib/memory/real-memory'),auth,change:()=>invalidation.notifySpaceChanged('space'),advance:ms=>time+=ms};
+  return {locations:load('@/lib/memory/locations'),mapper:load('@/lib/memory/mapper'),cache:load('@/lib/memory/cache'),api:load('@/lib/memory/real-memory'),auth,change:()=>invalidation.notifySpaceChanged('space'),advance:ms=>time+=ms};
 }
 function deferred() { let resolve;const promise=new Promise(r=>resolve=r);return {promise,resolve}; }
 function client(execute, storage = {}) {
@@ -160,4 +160,27 @@ test('deleting a memory also cleans photos added since its detail was opened',as
   const result=await api.deleteMemory(db,{memoryId:'m',spaceId:'space',photoPaths:['space/m/user/old.webp']});
   assert.equal(result.deleted,true);assert.equal(result.cleanupFailedPaths,0);
   assert.deepEqual(removed.sort(),['space/m/user/new.webp','space/m/user/old.webp']);
+});
+
+
+test('city locations resolve exact names and explicit city-place labels without guessing landmarks',()=>{
+  const {locations}=setup();
+  const city=locations.findCity('南京市');
+  assert.equal(city.name,'南京');
+  assert.ok(city.latitude>31 && city.latitude<33 && city.longitude>118 && city.longitude<120);
+  assert.equal(locations.findCity(' Nanjing · 玄武湖 ').name,'南京');
+  assert.equal(locations.findCity('南京路'),null);
+  assert.equal(locations.findCity('家里'),null);
+  assert.equal(locations.findCity(''),null);
+  assert.equal(locations.searchCities('xian')[0].name,'西安');
+});
+
+test('city records appear on the map while existing explicit locations retain their coordinates',()=>{
+  const {mapper}=setup();
+  const city=mapper.mapMemory({...row('city'),location:'南京 · 玄武湖',latitude:null,longitude:null});
+  assert.ok(city.coordinates.latitude>31 && city.coordinates.longitude>118);
+  const precise=mapper.mapMemory({...row('exact'),location:'南京',latitude:32.09,longitude:118.8});
+  assert.equal(precise.coordinates.latitude,32.09);
+  assert.equal(precise.coordinates.longitude,118.8);
+  assert.equal(mapper.mapMemory({...row('home'),location:'家里'}).coordinates,null);
 });
