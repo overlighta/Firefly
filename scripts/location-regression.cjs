@@ -57,4 +57,3 @@ const base=process.env.TEST_BASE_URL || 'http://127.0.0.1:4330';
  } finally {await browser.close();}
  console.log(JSON.stringify(report,null,2));
 })().catch(e=>{console.error(e);process.exitCode=1});
-
