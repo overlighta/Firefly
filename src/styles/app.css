@@ -12,3 +12,26 @@
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 
 @media(max-width:760px){.journal-app .memory-gallery--empty{min-height:280px}}
+
+.login-mobile-tagline{display:none}
+.login-password-field{display:grid;gap:10px}
+.login-password-input{position:relative}
+.login-password-input input{padding-right:66px}
+.login-password-input button{position:absolute;right:3px;top:2px;min-width:56px;min-height:44px;border:0;background:transparent;color:#52684b;font-size:.8rem;border-radius:4px}
+@media(max-width:760px){
+  .journal-login{grid-template-rows:auto 1fr;align-content:start;background:radial-gradient(ellipse at 100% 0%,#e9eddf 0,transparent 52%),#f9f8f3}
+  .login-story{min-height:0;flex-direction:row;align-items:center;justify-content:space-between;gap:16px;padding:calc(22px + env(safe-area-inset-top)) 24px 20px;background:transparent;border-bottom:1px solid var(--memory-line)}
+  .login-story__title{display:none}
+  .login-mobile-tagline{display:block;font-size:.72rem;color:#737d66;letter-spacing:.06em}
+  .login-form-panel{justify-content:flex-start;padding:28px 24px calc(20px + env(safe-area-inset-bottom))}
+  .login-form-panel>div{margin:0 auto;max-width:420px}
+  .login-eyebrow{margin:0;font-size:.7rem}
+  .login-form-panel h2{font-size:1.8rem;line-height:1.4;margin:10px 0}
+  .login-intro{margin:0;font-size:.82rem}
+  .login-form{margin-top:26px;gap:18px}
+  .login-form input{height:50px;font-size:16px}
+  .login-password-input button{top:3px}
+  .login-form .app-primary{min-height:52px}
+  .login-private-note{margin:18px 0 0}
+  .login-form-panel>small{margin-top:24px}
+}
