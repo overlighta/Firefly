@@ -40,7 +40,7 @@ function setup() {
     modules.set(name,module.exports);
     return module.exports;
   }
-  return {recollections:load('@/lib/memory/recollections'),footprints:load('@/lib/memory/footprints'),locations:load('@/lib/memory/locations'),mapper:load('@/lib/memory/mapper'),cache:load('@/lib/memory/cache'),api:load('@/lib/memory/real-memory'),auth,change:()=>invalidation.notifySpaceChanged('space'),advance:ms=>time+=ms};
+  return {together:load('@/lib/memory/together'),recollections:load('@/lib/memory/recollections'),footprints:load('@/lib/memory/footprints'),locations:load('@/lib/memory/locations'),mapper:load('@/lib/memory/mapper'),cache:load('@/lib/memory/cache'),api:load('@/lib/memory/real-memory'),auth,change:()=>invalidation.notifySpaceChanged('space'),advance:ms=>time+=ms};
 }
 function deferred() { let resolve;const promise=new Promise(r=>resolve=r);return {promise,resolve}; }
 function client(execute, storage = {}) {
@@ -225,4 +225,29 @@ test('draw letters without repeats until a complete round, and avoid repeating a
  assert.equal(r.drawRecollection([],null,[]).id,null);
  assert.equal(r.drawRecollection([{id:'a'}],'a',['a']).id,'a');
  assert.equal(r.drawRecollection([{id:'b'}],'a',['a']).id,'b');
+});
+
+test('together overview counts distinct dates and only genuine writing by current members',()=>{
+ const {together:t}=setup();
+ const memory=(id,date,perspectives)=>({id,date,createdAt:date,perspectives:perspectives.map(([userId,content])=>({userId,content}))});
+ const items=[memory('a','2024-02-29',[['me','我的'],['partner','你的']]),memory('b','2024-02-29',[['partner','另一条'],['me','  ']]),memory('c','2025-01-02',[['outsider','不属于成员']]),memory('d','2025-01-01',[['me','仅自己']])];
+ const summary=t.togetherSummary(items,['me','partner'],'me');
+ assert.equal(summary.days.length,3);
+ assert.equal(summary.shared.length,1);
+ assert.equal(summary.waiting.length,1);assert.equal(summary.waiting[0].id,'b');
+ assert.equal(summary.first.date,'2024-02-29');
+ assert.equal(t.togetherSummary(items,['me','partner'],'partner').waiting[0].id,'d');
+ assert.equal(t.togetherSummary(items,['me'],'me').shared.length,0);
+ assert.equal(t.togetherSummary(items,['me','partner'],'unknown').waiting.length,0);
+ assert.equal(t.togetherSummary([],['me','partner'],'me').first,null);
+ assert.equal(items[0].id,'a','sorting never mutates shared cached records');
+});
+
+test('shared calendar is Monday-first and supports leap days and year boundaries',()=>{
+ const {together:t}=setup();
+ const leap=t.monthDays('2024-02');
+ assert.equal(leap.filter(Boolean).length,29);assert.equal(leap[3],'2024-02-01');assert.equal(leap.at(-1),'2024-02-29');
+ assert.equal(t.monthDays('2025-02').filter(Boolean).length,28);
+ assert.equal(t.monthDays('2024-12').filter(Boolean).length,31);
+ assert.equal(t.monthDays('2026-00').length,0);assert.equal(t.monthDays('').length,0);
 });

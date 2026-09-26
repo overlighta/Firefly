@@ -3,6 +3,7 @@ const revealTargets = [
   ".memory-day", ".memory-gallery", ".memory-perspective", ".memory-card",
   ".memory-timeline-year > header", ".memory-timeline-item__body", ".memory-real-card",
   ".chronicle-month__heading", ".chronicle-entry__sheet",
+  ".together-signatures", ".together-colophon", ".together-quote", ".together-calendar", ".together-unfinished",
   ".memory-map-canvas__watermark", ".memory-place-list > article",
   ".memory-space-person", ".memory-space-portrait__archive", ".memory-space-stats > div",
   ".memory-space-notes article", ".memory-detail__hero", ".journal-search__results > a",

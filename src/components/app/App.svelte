@@ -31,7 +31,7 @@ const headings: Record<string, { eyebrow: string; title: string; description: st
   timeline: { eyebrow: "按日子，收藏生活", title: "一页一页，都是我们", description: "把照片贴好，把小事记下。沿着月份，翻回一起走过的日子。" },
   memories: { eyebrow: "写给那时的我们", title: "有些话，值得再读一遍", description: "翻开同一天的两个视角，重新遇见当时的心情。" },
   map: { eyebrow: "一起走过的地方", title: "走过的地方，都有我们", description: "把一座城、一张照片和那一天的心情，收进同一本旅行手帐。" },
-  space: { eyebrow: "只有我们", title: "两个人，一本生活手记", description: "各自写下的心情，在这里慢慢相遇。" },
+  space: { eyebrow: "只有我们", title: "故事的主角，一直是我们", description: "各自写下的心情，在这里慢慢相遇。" },
   search: { eyebrow: "寻找一段记忆", title: "那一天，藏在哪里", description: "用一句话、一个地点，或者一个日期，找回熟悉的片刻。" },
 };
 let mounted = false;
@@ -119,7 +119,7 @@ async function logout() {
         {#if offline}<p class="connection-notice" role="status">当前离线。已打开的记录仍可翻阅，恢复连接后会自动同步。</p>{/if}
         {#if logoutError}<p class="connection-notice" role="alert">{logoutError}</p>{/if}
         <main id="journal-main" class="memory-app__content" tabindex="-1" data-memory-page-content use:revealSections={route}>
-          {#if heading}{#key route}<header class="memory-page-header"><div><p>{heading.eyebrow}</p><h1>{heading.title}</h1><span>{heading.description}</span></div><small>我们的生活，持续更新中</small></header>{/key}{/if}
+          {#if heading && route !== "space"}{#key route}<header class="memory-page-header"><div><p>{heading.eyebrow}</p><h1>{heading.title}</h1><span>{heading.description}</span></div><small>我们的生活，持续更新中</small></header>{/key}{/if}
           <div hidden={route !== "home"} class="journal-view" data-view="home"><Home /></div>
           <div hidden={route !== "timeline"} class="journal-view" data-view="timeline"><Timeline active={route === "timeline"} /></div>
           <div hidden={route !== "memories"} class="journal-view" data-view="memories"><Memories active={route === "memories"} /></div>
