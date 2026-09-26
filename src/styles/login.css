@@ -1,0 +1,56 @@
+/* A private scrapbook cover, drawn locally without loading personal photos. */
+.journal-login--scrapbook{--login-ink:#344330;--login-rust:#a45b40;max-width:none;grid-template-columns:minmax(0,1.08fr) minmax(0,1fr);background:#eeeadf;background-image:radial-gradient(#776b5010 .7px,transparent .7px);background-size:5px 5px;color:var(--login-ink)}
+.journal-login--scrapbook .login-story{background:transparent;min-height:100svh;padding:42px clamp(32px,5.5vw,90px);overflow:hidden}
+.journal-login--scrapbook .app-monogram{font-size:2rem;color:var(--login-ink)}
+.journal-login--scrapbook .login-story__title{margin-top:54px}
+.journal-login--scrapbook .login-story__title>p{font-size:10px;letter-spacing:.19em;color:#807f6e}
+.journal-login--scrapbook .login-story h1{font-size:clamp(2.5rem,3.6vw,4rem);line-height:1.35;margin:20px 0 22px;letter-spacing:-.02em}
+.journal-login--scrapbook .login-story h1 span{position:relative;display:inline-block;color:var(--login-rust)}
+.journal-login--scrapbook .login-story h1 span:after{content:"";position:absolute;left:0;right:0;bottom:-5px;border-bottom:2px solid #a45b4066;border-radius:50%;height:8px;transform:rotate(-2deg)}
+.journal-login--scrapbook .login-story__title>span{font-size:.84rem;line-height:1.9;color:#727564}
+.scrapbook-collage{position:relative;height:335px;width:min(100%,465px);margin:36px auto 12px}
+.collage-grid-paper{position:absolute;inset:36px 30px 20px 20px;background:repeating-linear-gradient(0deg,transparent 0 19px,#a3b09d30 19px 20px),repeating-linear-gradient(90deg,#e5e9dc 0 19px,#a3b09d30 19px 20px);transform:rotate(7deg);border:1px solid #c8cebe}
+.collage-postcard{position:absolute;left:8px;top:8px;width:72%;margin:0;padding:12px 12px 17px;background:#fffcf3;box-shadow:0 8px 22px #493b2117;transform:rotate(-7deg);border:1px solid #ded8c7}
+.collage-tape{position:absolute;z-index:1;left:32%;top:-14px;width:96px;height:29px;background:repeating-linear-gradient(90deg,#b0b28b66 0 3px,#b6b79660 3px 6px);transform:rotate(5deg);clip-path:polygon(2% 0,97% 2%,100% 90%,0 100%)}
+.collage-landscape{overflow:hidden;background:#dfe4d4}.collage-landscape svg{display:block;width:100%;height:auto}
+.collage-postcard figcaption{font:400 1.15rem var(--memory-serif);margin:14px 5px 0;color:#596347}.collage-postcard figcaption small{display:block;font:8px var(--memory-sans);letter-spacing:.14em;color:#98937f;margin-top:9px}
+.collage-memo{position:absolute;right:-5px;bottom:20px;width:190px;padding:24px 20px;background:#f1dfb4;box-shadow:0 5px 14px #53432b12;transform:rotate(7deg);border:1px solid #d7c795}
+.collage-memo>span{font-size:10px;color:#8f7953;letter-spacing:.1em}.collage-memo p{font:400 .88rem/1.8 var(--memory-serif);letter-spacing:0;color:#706346;margin:12px 0}.collage-memo i{font:italic 14px Georgia,serif;color:#99875e}
+.collage-seal{position:absolute;right:5px;top:-18px;width:108px;height:108px;border:2px solid #a45b4080;outline:1px solid #a45b4070;outline-offset:-7px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;font:400 17px/1.5 var(--memory-serif);color:#a45b40;transform:rotate(15deg)}.collage-seal span{font:6px var(--memory-sans);letter-spacing:.05em;margin-top:5px}
+.collage-sprig{position:absolute;width:62px;height:130px;left:-10px;bottom:-7px;transform:rotate(-24deg)}
+.journal-login--scrapbook .login-story footer{padding-top:12px;margin-top:auto;display:flex;justify-content:space-between;font-size:10px;letter-spacing:.05em;color:#858471}
+.journal-login--scrapbook .login-form-panel{position:relative;padding:65px clamp(24px,5vw,80px);justify-content:center;border-left:1px solid #76684d19;background:linear-gradient(90deg,#74654708,transparent 25%)}
+.journal-login--scrapbook .login-paper{position:relative;max-width:430px;margin:auto;padding:35px 36px 30px;background:#fffcf4;border:1px solid #dcd7c8;box-shadow:5px 6px 0 -1px #f4f0e5,5px 6px 0 0 #dcd7c8,0 20px 55px #55472b0b}
+.login-paper:before{content:"";position:absolute;top:-17px;left:calc(50% - 47px);width:94px;height:30px;background:#b8bf9760;transform:rotate(-5deg);border-left:1px dashed #a7ae8177;border-right:1px dashed #a7ae8177}
+.login-paper-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}.journal-login--scrapbook .login-eyebrow{font-size:10px;letter-spacing:.13em;color:#858570;margin:0}
+.login-entry-stamp{padding:7px 6px;border:1px solid #b3715566;outline:1px solid #b3715540;outline-offset:2px;color:#a45b40;font:15px var(--memory-serif);transform:rotate(9deg)}
+.journal-login--scrapbook .login-form-panel h2{font:400 clamp(1.65rem,2.25vw,2.2rem)/1.45 var(--memory-serif);margin:0;color:#37432e;letter-spacing:-.02em}
+.journal-login--scrapbook .login-form-panel h2>span{display:block;font:400 .8rem/1.8 var(--memory-sans);color:#a45b40;margin-top:10px;letter-spacing:.04em}
+.journal-login--scrapbook .login-intro{font-size:.75rem;color:#878574;margin:6px 0 0}
+.journal-login--scrapbook .login-form{margin-top:28px;gap:20px}.journal-login--scrapbook .login-form label{font-size:.76rem;color:#5c654e}
+.journal-login--scrapbook .login-form input{border:1px solid #dcd9ca;border-radius:4px;background:#f6f4eb;font-size:16px;height:50px}
+.journal-login--scrapbook .login-form input:focus{background:#fffef9}
+.journal-login--scrapbook .login-form .app-primary{min-height:52px;border-radius:4px;background:#455a3d;border-color:#455a3d;box-shadow:0 3px 0 #34462e;font-size:.86rem;letter-spacing:.04em}
+.journal-login--scrapbook .login-form .app-primary:hover{background:#394f32}
+.journal-login--scrapbook .login-private-note{margin-top:23px;padding-top:17px;border-top:1px dashed #c8c9b8;font-size:10px;letter-spacing:.025em}
+.journal-login--scrapbook .login-form-panel>small{margin-top:32px;font-size:11px;color:#85816d;letter-spacing:.12em}.login-form-panel>small>span{display:block;color:#a45b40;font-size:22px;margin-top:12px}
+@media(max-width:1100px) and (min-width:761px){.journal-login--scrapbook .login-story{padding:32px}.journal-login--scrapbook .login-paper{padding:30px 24px}.collage-memo{width:160px;right:0}.collage-seal{right:0;width:85px;height:85px;font-size:14px}}
+@media(max-width:760px){
+  .journal-login--scrapbook{grid-template-columns:1fr;grid-template-rows:auto 1fr;background-color:#eeebdf}
+  .journal-login--scrapbook .login-story{min-height:0;display:flex;padding:calc(18px + env(safe-area-inset-top)) 24px 17px;border-bottom:0;overflow:visible}
+  .journal-login--scrapbook .app-monogram{font-size:1.8rem}
+  .journal-login--scrapbook .login-mobile-tagline{font:11px var(--memory-serif);color:#7f806a;letter-spacing:.08em}
+  .journal-login--scrapbook .login-story__title,.journal-login--scrapbook .scrapbook-collage,.journal-login--scrapbook .login-story footer{display:none}
+  .journal-login--scrapbook .login-form-panel{padding:15px 22px calc(22px + env(safe-area-inset-bottom));border:0;background:none;justify-content:flex-start}
+  .journal-login--scrapbook .login-paper{margin:0 auto;max-width:420px;padding:25px 24px 20px}
+  .login-paper-top{margin-bottom:16px}.login-entry-stamp{font-size:13px;padding:5px}
+  .journal-login--scrapbook .login-form-panel h2{font-size:1.7rem;white-space:nowrap}
+  .journal-login--scrapbook .login-form-panel h2>span{font-size:.76rem;margin-top:5px}
+  .journal-login--scrapbook .login-intro{font-size:.7rem;margin-top:2px}
+  .journal-login--scrapbook .login-form{margin-top:22px;gap:17px}
+  .journal-login--scrapbook .login-private-note{margin-top:20px;padding-top:14px;font-size:9px}
+  .journal-login--scrapbook .login-form-panel>small{margin-top:22px;font-size:10px}
+  .login-form-panel>small>span{display:inline-block;font-size:15px;margin:0 0 0 10px;vertical-align:middle}
+}
+@media(max-width:350px){.journal-login--scrapbook .login-form-panel{padding-left:16px;padding-right:16px}.journal-login--scrapbook .login-paper{padding:22px 19px 18px}.journal-login--scrapbook .login-form-panel h2{font-size:1.5rem}.journal-login--scrapbook .login-form{gap:14px;margin-top:18px}}
+@media(prefers-reduced-motion:no-preference) and (hover:hover){.collage-postcard{animation:scrapbook-settle 650ms ease-out both}.collage-memo{animation:scrapbook-memo-settle 700ms ease-out both}@keyframes scrapbook-settle{from{opacity:.7;translate:0 12px;rotate:-3deg}to{opacity:1;translate:0 0;rotate:0deg}}@keyframes scrapbook-memo-settle{from{opacity:.6;translate:5px 10px}to{opacity:1;translate:0 0}}}
