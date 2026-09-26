@@ -7,6 +7,8 @@ export let longitude = "";
 export let recent: string[] = [];
 
 $: city = findCity(value);
+$: usingSavedPosition = city && latitude !== "" && longitude !== "" &&
+	(Math.abs(Number(latitude) - city.latitude) > 0.00001 || Math.abs(Number(longitude) - city.longitude) > 0.00001);
 $: suggestions = searchCities(value);
 $: place = city ? value.split("·").slice(1).join("·").replace(/^ /, "") : "";
 $: recentPlaces = [...new Set(recent.filter(Boolean))].filter(item => item !== value).slice(0, 4);
@@ -48,5 +50,5 @@ function changePlace(next: string) {
 			</div>
 		</details>
 	{/if}
-	<p class="journal-location__hint" aria-live="polite">{city ? `已选择${city.name}，足迹将标记在城市附近。具体地点作为文字保存。` : latitude && longitude ? "已保留这条记录原来的地图位置。" : "选择内置城市会自动点亮足迹；其他地点也可以直接保存。"}</p>
+	<p class="journal-location__hint" aria-live="polite">{usingSavedPosition ? "已保留原来标记的位置。点击城市按钮，可改用这座城市的大致位置。" : city ? `已选择${city.name}，足迹将标记在城市附近。具体地点作为文字保存。` : latitude && longitude ? "已保留这条记录原来的地图位置。" : "选择内置城市会自动点亮足迹；其他地点也可以直接保存。"}</p>
 </div>

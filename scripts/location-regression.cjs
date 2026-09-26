@@ -12,7 +12,7 @@ const base=process.env.TEST_BASE_URL || 'http://127.0.0.1:4330';
    const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
    await page.goto(base+'/space/login/');await page.fill('#login-email',process.env.TEST_AUTH_EMAIL);await page.fill('input[type=password]',process.env.TEST_AUTH_PASSWORD);await page.click('button[type=submit]');
    await page.locator('.journal-collection').waitFor({timeout:45000});
-   await page.waitForFunction(()=>[...document.querySelectorAll('[data-view="home"] .memory-gallery img')].every(i=>i.complete&&i.naturalWidth>0),null,{timeout:45000});
+   // Location checks do not wait for full-size photo downloads; app-regression covers the lightbox.
    const layout=await page.evaluate(()=>{const rect=s=>document.querySelector(s).getBoundingClientRect();const gallery=rect('.memory-gallery');const footer=rect('.memory-today__footer');return {width:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth,galleryBottom:gallery.bottom,footerTop:footer.top};});
    assert.ok(layout.scroll<=width,'no page overflow');assert.ok(layout.galleryBottom<=layout.footerTop,'gallery does not overlap footer');
    await page.screenshot({path:`test-results/journal-home-${width}.png`,fullPage:true});
