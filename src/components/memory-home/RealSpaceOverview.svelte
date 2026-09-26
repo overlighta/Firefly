@@ -80,7 +80,7 @@ async function refreshSpaceOverviewSilently() {
 			getSupabaseClient(),
 			context.space.id,
 			"timeline",
-			
+
 		);
 		memories = result.memories;
 		errorMessage = "";
@@ -113,7 +113,7 @@ async function reloadSpaceOverview() {
 			getSupabaseClient(),
 			spaceId,
 			"timeline",
-			
+
 		);
 		memories = result.memories;
 		perfNavMark("page query end", {

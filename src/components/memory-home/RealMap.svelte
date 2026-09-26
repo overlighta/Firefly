@@ -101,7 +101,7 @@ async function refreshMapSilently() {
 			getSupabaseClient(),
 			context.space.id,
 			"timeline",
-			
+
 		);
 		memories = result.memories;
 		errorMessage = "";
@@ -135,7 +135,7 @@ async function reloadMap() {
 			getSupabaseClient(),
 			spaceId,
 			"timeline",
-			
+
 		);
 		memories = result.memories;
 		const nextCoordinateMemories = result.memories.filter(hasValidCoordinates);

@@ -84,7 +84,7 @@ async function refreshTimelineSilently() {
 			getSupabaseClient(),
 			context.space.id,
 			"timeline",
-			
+
 		);
 		memories = result.memories;
 		errorMessage = "";
@@ -117,7 +117,7 @@ async function reloadTimeline() {
 			getSupabaseClient(),
 			spaceId,
 			"timeline",
-			
+
 		);
 		memories = result.memories;
 		perfNavMark("page query end", {

@@ -111,7 +111,7 @@ async function refreshMemoriesPageSilently() {
 			getSupabaseClient(),
 			context.space.id,
 			"timeline",
-			
+
 		);
 		memories = result.memories;
 		signedPathsKey = "";
@@ -153,7 +153,7 @@ async function reloadMemoriesPage() {
 			getSupabaseClient(),
 			spaceId,
 			"timeline",
-			
+
 		);
 		memories = result.memories;
 		randomMemoryId = pickRandomMemoryId(result.memories, null);
