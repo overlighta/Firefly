@@ -1,0 +1,121 @@
+/* Motion is decorative: content remains readable and all controls respond immediately. */
+:root {
+  --journal-ease: cubic-bezier(.2, .7, .25, 1);
+  --journal-quick: 160ms;
+}
+
+/* Keep fixed controls outside transformed ancestors. Individual content animates instead. */
+.journal-view,
+.journal-app .memory-perspective,
+.journal-app .memory-space-person { animation: none; }
+
+.journal-app .memory-topnav nav { position: relative; isolation: isolate; }
+.journal-app .memory-topnav nav a {
+  z-index: 1;
+  transition: color var(--journal-quick) ease;
+}
+.journal-nav-indicator {
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  left: 0;
+  width: var(--nav-width, 0px);
+  height: var(--nav-height, 0px);
+  transform: translate(var(--nav-x, 0px), var(--nav-y, 0px));
+  border-radius: 10px;
+  background: #e7edde;
+  pointer-events: none;
+  opacity: 0;
+  transition: transform 260ms var(--journal-ease), width 260ms var(--journal-ease), opacity 140ms ease;
+}
+nav[data-has-active="true"] > .journal-nav-indicator { opacity: .7; }
+.journal-app .memory-topnav nav a.is-active { background: transparent; }
+.journal-app .memory-topnav nav a svg { transition: transform 200ms var(--journal-ease); }
+.journal-app .memory-topnav nav a.is-active svg { transform: translateY(-1px); }
+
+.memory-page-header > div > *,
+.login-story__title > *,
+.login-form-panel > div {
+  animation: journal-content-in 360ms var(--journal-ease) both;
+}
+.memory-page-header h1, .login-story h1 { animation-delay: 35ms; }
+.memory-page-header div > span, .login-story__title > span { animation-delay: 70ms; }
+.login-form-panel > div { animation-duration: 420ms; }
+
+.journal-app :is(.memory-card, .memory-real-card, .journal-search__results > a) {
+  transition: translate 220ms var(--journal-ease), box-shadow 220ms ease, border-color 220ms ease;
+}
+:is(.app-primary, .app-secondary, .memory-icon-button, .memory-dialog button, .memory-archive-random button, .journal-lightbox button) {
+  transition: transform var(--journal-quick) var(--journal-ease), background-color var(--journal-quick) ease, box-shadow var(--journal-quick) ease;
+}
+:is(.app-primary, .app-secondary, .memory-icon-button, .memory-dialog button, .memory-create-button, .memory-archive-random button, .journal-lightbox button):active:not(:disabled) {
+  transform: scale(.97);
+}
+.memory-create-button > span:first-child { transition: rotate 220ms var(--journal-ease); }
+.memory-view-detail { display: inline-block; transition: translate 180ms var(--journal-ease); }
+:is(.login-form, .memory-dialog, .journal-search) :is(input, textarea) {
+  transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+}
+:is(.login-form, .memory-dialog, .journal-search) :is(input, textarea):focus {
+  border-color: #839579;
+  box-shadow: 0 0 0 3px #83957915;
+}
+
+.memory-dialog[open] .memory-dialog__panel { animation: journal-dialog-in 220ms var(--journal-ease); }
+.memory-dialog[open]::backdrop,
+.journal-lightbox[open]::backdrop { animation: journal-backdrop-in 180ms ease-out; }
+.journal-lightbox[open] { animation: journal-backdrop-in 160ms ease-out; }
+.journal-lightbox[open] img { animation: journal-photo-in 240ms var(--journal-ease); }
+
+@media (hover: hover) and (pointer: fine) {
+  .journal-app :is(.memory-card, .memory-real-card, .journal-search__results > a):hover {
+    translate: 0 -4px;
+    border-color: #9ba98c;
+    box-shadow: 0 12px 26px #35422f0c;
+  }
+  .memory-view-detail:hover { translate: 3px 0; }
+  .memory-create-button:hover > span:first-child { rotate: 90deg; }
+  .memory-icon-button:hover { transform: translateY(-2px); background: #e7edde; }
+  .journal-app .memory-topnav nav a:hover svg { transform: translateY(-2px); }
+  .journal-app .memory-real-card__photo img { transition: transform 320ms var(--journal-ease); }
+  .journal-app .memory-real-card:hover img { transform: scale(1.025); }
+}
+
+/* A brief, gentle movement on the cover; no perpetual page-wide animation. */
+.paper-note { animation: journal-paper-drift 6s ease-in-out 2; }
+.paper-leaf { animation: journal-leaf-sway 5s ease-in-out 2; transform-origin: bottom center; }
+
+@keyframes journal-content-in {
+  from { opacity: .65; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes journal-dialog-in {
+  from { opacity: .7; transform: translateY(12px) scale(.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes journal-photo-in {
+  from { opacity: .6; transform: scale(.975); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes journal-backdrop-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes journal-paper-drift {
+  0%, 100% { transform: translateY(0) rotate(-9deg); }
+  50% { transform: translateY(-6px) rotate(-7.5deg); }
+}
+@keyframes journal-leaf-sway {
+  0%, 100% { transform: rotate(20deg); }
+  50% { transform: rotate(27deg); }
+}
+
+@media (max-width: 760px) {
+  .journal-app .memory-topnav nav { position: fixed; }
+  nav[data-has-active="true"] > .journal-nav-indicator { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .journal-app :is(.memory-card, .memory-real-card, .journal-search__results > a):hover,
+  .memory-view-detail:hover { translate: none; }
+}
+@media (prefers-reduced-motion: reduce), (hover: none) {
+  .paper-note, .paper-leaf { animation: none; }
+}

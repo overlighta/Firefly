@@ -1,0 +1,9 @@
+.env*
+.git/
+.astro/
+node_modules/
+dist/
+.wrangler/
+.test-accounts.local.txt
+supabase/bootstrap/*.local.sql
+test-results/

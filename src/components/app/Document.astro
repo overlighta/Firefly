@@ -1,0 +1,24 @@
+---
+import App from "./App.svelte";
+import "@/styles/memory-home.css";
+import "@/styles/app.css";
+import "@/styles/motion.css";
+---
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#f5f2eb" />
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
+    <meta name="description" content="两个人一起写下的生活、照片与共同回忆。" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>我们 · 私人生活手记</title>
+  </head>
+  <body>
+    <App client:only="svelte">
+      <div slot="fallback" class="app-boot" role="status"><span class="app-monogram">我们<i></i></span><p>正在翻开这本手记…</p></div>
+    </App>
+    <noscript><p class="app-boot">请启用 JavaScript，安全地登录并查看你的私人记录。</p></noscript>
+  </body>
+</html>

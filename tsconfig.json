@@ -1,48 +1,10 @@
 {
   "extends": "astro/tsconfigs/base",
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "jsx": "react-jsx",
-    "jsxImportSource": "react",
-    "strictNullChecks": true,
-    "allowJs": false,
-    "declaration": true,
-    "plugins": [
-      {
-        "name": "@astrojs/ts-plugin"
-      }
-    ],
-    "paths": {
-      "@components/*": [
-        "./src/components/*"
-      ],
-      "@assets/*": [
-        "./src/assets/*"
-      ],
-      "@constants/*": [
-        "./src/constants/*"
-      ],
-      "@utils/*": [
-        "./src/utils/*"
-      ],
-      "@i18n/*": [
-        "./src/i18n/*"
-      ],
-      "@layouts/*": [
-        "./src/layouts/*"
-      ],
-      "@/*": [
-        "./src/*"
-      ]
-    }
+    "target": "ES2022", "module": "ESNext", "moduleResolution": "bundler",
+    "strictNullChecks": true, "allowJs": false, "skipLibCheck": true,
+    "paths": { "@/*": ["./src/*"] }
   },
-  "include": [
-    ".astro/types.d.ts",
-    "src/**/*"
-  ],
-  "exclude": [
-    "dist"
-  ]
+  "include": [".astro/types.d.ts", "src/**/*"],
+  "exclude": ["dist", "node_modules"]
 }
