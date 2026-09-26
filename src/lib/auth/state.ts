@@ -294,22 +294,18 @@ export async function signInWithPassword(
 	signInInProgress = true;
 	authState.update((current) => ({ ...current, status: "loading" }));
 
-	const response = await supabase.auth.signInWithPassword({ email, password });
-
-	if (response.error) {
-		signInInProgress = false;
+	try {
+		const response = await supabase.auth.signInWithPassword({ email, password });
+		if (response.error) throw response.error;
+		authDebug("signIn success");
+		await applySession(response.data.session, "signInWithPassword");
+	} catch (error) {
 		authDebugWarn("signIn failed", {
-			code: getErrorCode(response.error),
-			message: getErrorMessage(response.error),
-			status: getErrorStatus(response.error),
+			code: getErrorCode(error),
+			status: getErrorStatus(error),
 		});
 		authState.set(toUnauthenticatedContext());
-		throw response.error;
-	}
-
-	authDebug("signIn success");
-	try {
-		await applySession(response.data.session, "signInWithPassword");
+		throw error;
 	} finally {
 		signInInProgress = false;
 		authInitialized = true;

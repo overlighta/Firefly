@@ -78,6 +78,12 @@ async function main() {
       await page.locator(".journal-signout").click();
       await page.locator("#login-email").waitFor({timeout:15000});
       assert.equal(await page.locator("[data-private-app]").count(),0,"private DOM cleared on logout");
+      await page.fill("#login-email", width === 390 ? process.env.TEST_PARTNER_EMAIL : process.env.TEST_AUTH_EMAIL);
+      await page.fill("#login-password", width === 390 ? process.env.TEST_PARTNER_PASSWORD : process.env.TEST_AUTH_PASSWORD);
+      await page.click("button[type=submit]");
+      await page.waitForFunction(()=>document.documentElement.dataset.privateAuth === "authenticated", null, {timeout:45000});
+      await page.locator(".journal-signout").click();
+      await page.locator("#login-email").waitFor({timeout:15000});
       await context.close();
     }
     assert.deepEqual(report.errors,[],"No uncaught browser errors");

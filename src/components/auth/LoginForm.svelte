@@ -1,13 +1,15 @@
 <script lang="ts">
 import { authState, signInWithPassword, signOut } from "@/lib/auth/state";
+import { loginErrorMessage } from "@/lib/auth/login-error";
 let email = "";
 let password = "";
 let loading = false;
 let errorMessage = "";
 async function submit() {
+  if (loading) return;
   loading = true; errorMessage = "";
   try { await signInWithPassword(email.trim(), password); }
-  catch { errorMessage = navigator.onLine ? "暂时无法登录，请检查邮箱和密码后重试。" : "网络已断开，请恢复连接后重试。"; }
+  catch (error) { errorMessage = loginErrorMessage(error, navigator.onLine); }
   finally { loading = false; }
 }
 </script>
