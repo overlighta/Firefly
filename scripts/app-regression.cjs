@@ -31,7 +31,7 @@ async function main() {
         await page.locator(`nav a[href="${href}"]`).click();
         await page.locator(`[data-view="${view}"]:visible`).waitFor();
         const frameMs = Date.now()-start;
-        await page.waitForFunction(view => {const el=document.querySelector(`[data-view="${view}"]`);return el && !/正在(翻开|读取|整理|打开|寻找|加载)/.test(el.innerText);},view,{timeout:45000});
+        await page.waitForFunction(view => {const el=document.querySelector(`[data-view="${view}"]`);return el && ![...el.querySelectorAll(".memory-real-state h1,.memory-detail-state h1")].some(node=>node.textContent.trim().startsWith("正在"));},view,{timeout:45000});
         assert.equal(await page.evaluate(()=>document.documentElement.dataset.authRuntimeInstance),runtime,"auth runtime persisted");
         const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth);
         assert.ok(overflow <= 2,`No horizontal overflow at ${width}px on ${view}: ${overflow}`);

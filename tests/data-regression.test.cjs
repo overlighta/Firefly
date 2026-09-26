@@ -40,7 +40,7 @@ function setup() {
     modules.set(name,module.exports);
     return module.exports;
   }
-  return {locations:load('@/lib/memory/locations'),mapper:load('@/lib/memory/mapper'),cache:load('@/lib/memory/cache'),api:load('@/lib/memory/real-memory'),auth,change:()=>invalidation.notifySpaceChanged('space'),advance:ms=>time+=ms};
+  return {footprints:load('@/lib/memory/footprints'),locations:load('@/lib/memory/locations'),mapper:load('@/lib/memory/mapper'),cache:load('@/lib/memory/cache'),api:load('@/lib/memory/real-memory'),auth,change:()=>invalidation.notifySpaceChanged('space'),advance:ms=>time+=ms};
 }
 function deferred() { let resolve;const promise=new Promise(r=>resolve=r);return {promise,resolve}; }
 function client(execute, storage = {}) {
@@ -183,4 +183,24 @@ test('city records appear on the map while existing explicit locations retain th
   assert.equal(precise.coordinates.latitude,32.09);
   assert.equal(precise.coordinates.longitude,118.8);
   assert.equal(mapper.mapMemory({...row('home'),location:'家里'}).coordinates,null);
+});
+
+
+test('travel album merges city aliases and landmarks without overwriting stored coordinates',()=>{
+ const {footprints,mapper}=setup();
+ const first=mapper.mapMemory({...row('one'),location:'南京',latitude:30,longitude:120});
+ const second=mapper.mapMemory({...row('two'),location:'南京市 · 玄武湖',latitude:32.1,longitude:118.8});
+ const third=mapper.mapMemory({...row('three'),location:'Nanjing',latitude:null,longitude:null});
+ const groups=footprints.buildFootprints([first,second,third]);
+ assert.equal(groups.length,1);assert.equal(groups[0].memories.length,3);assert.equal(groups[0].location,'南京');
+ assert.equal(first.coordinates.latitude,30);assert.ok(groups[0].coordinates.latitude>32);assert.equal(groups[0].x,50);assert.equal(groups[0].y,50);
+});
+
+test('travel album keeps custom and missing places readable and places pins on the shared axis center',()=>{
+ const {footprints,mapper}=setup();
+ const memories=[mapper.mapMemory({...row('a'),location:'家里'}),mapper.mapMemory({...row('b'),location:null}),mapper.mapMemory({...row('c'),location:'地方一',latitude:30,longitude:120}),mapper.mapMemory({...row('d'),location:'地方二',latitude:32,longitude:120})];
+ const groups=footprints.buildFootprints(memories);
+ assert.equal(groups.length,4);assert.equal(groups.at(-1).pending,true);assert.equal(groups.find(g=>g.location==='家里').coordinates,null);
+ for(const group of groups.filter(g=>g.coordinates)){assert.equal(group.x,50);assert.ok(Number.isFinite(group.y));}
+ assert.equal(footprints.buildFootprints([]).length,0);
 });

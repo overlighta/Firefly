@@ -30,7 +30,7 @@ const links = [
 const headings: Record<string, { eyebrow: string; title: string; description: string }> = {
   timeline: { eyebrow: "日子慢慢，记忆长长", title: "时间留下的痕迹", description: "平凡的一天，回头看时，也在发着光。" },
   memories: { eyebrow: "再翻一页", title: "原来，我们记得", description: "某一天的一句话，一张照片，还有当时的心情。" },
-  map: { eyebrow: "一起走过的地方", title: "把日子留在地图上", description: "远方值得奔赴，家附近的那条路也值得记住。" },
+  map: { eyebrow: "一起走过的地方", title: "走过的地方，都有我们", description: "把一座城、一张照片和那一天的心情，收进同一本旅行手帐。" },
   space: { eyebrow: "只有我们", title: "两个人，一本生活手记", description: "各自写下的心情，在这里慢慢相遇。" },
   search: { eyebrow: "寻找一段记忆", title: "那一天，藏在哪里", description: "用一句话、一个地点，或者一个日期，找回熟悉的片刻。" },
 };
@@ -123,7 +123,7 @@ async function logout() {
           <div hidden={route !== "home"} class="journal-view" data-view="home"><Home /></div>
           <div hidden={route !== "timeline"} class="journal-view" data-view="timeline"><Timeline /></div>
           <div hidden={route !== "memories"} class="journal-view" data-view="memories"><Memories /></div>
-          <div hidden={route !== "map"} class="journal-view" data-view="map"><MapPage /></div>
+          <div hidden={route !== "map"} class="journal-view" data-view="map"><MapPage active={route === "map"} /></div>
           <div hidden={route !== "space"} class="journal-view" data-view="space"><Space /></div>
           {#if route === "search"}<Search />{/if}
           {#if route === "detail"}{#key $appLocation.pathname + $appLocation.search}<div class="journal-view" data-view="detail"><Detail /></div>{/key}{/if}
