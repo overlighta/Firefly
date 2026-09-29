@@ -19,6 +19,8 @@ import TopNavMembers from "@/components/memory-home/TopNavMembers.svelte";
 import Search from "./Search.svelte";
 import Lightbox from "./Lightbox.svelte";
 import Icon from "./Icon.svelte";
+import Birthday from "./Birthday.svelte";
+import BirthdayEntry from "./BirthdayEntry.svelte";
 
 const links = [
   { key: "home", name: "今天", href: "/" },
@@ -28,6 +30,7 @@ const links = [
   { key: "space", name: "我们", href: "/space/" },
 ];
 const headings: Record<string, { eyebrow: string; title: string; description: string }> = {
+  birthday: { eyebrow: "只属于这一页", title: "生日心意", description: "" },
   timeline: { eyebrow: "按日子，收藏生活", title: "一页一页，都是我们", description: "把照片贴好，把小事记下。沿着月份，翻回一起走过的日子。" },
   memories: { eyebrow: "写给那时的我们", title: "有些话，值得再读一遍", description: "翻开同一天的两个视角，重新遇见当时的心情。" },
   map: { eyebrow: "一起走过的地方", title: "走过的地方，都有我们", description: "把一座城、一张照片和那一天的心情，收进同一本旅行手帐。" },
@@ -119,12 +122,14 @@ async function logout() {
         {#if offline}<p class="connection-notice" role="status">当前离线。已打开的记录仍可翻阅，恢复连接后会自动同步。</p>{/if}
         {#if logoutError}<p class="connection-notice" role="alert">{logoutError}</p>{/if}
         <main id="journal-main" class="memory-app__content" tabindex="-1" data-memory-page-content use:revealSections={route}>
-          {#if heading && route !== "space"}{#key route}<header class="memory-page-header"><div><p>{heading.eyebrow}</p><h1>{heading.title}</h1><span>{heading.description}</span></div><small>我们的生活，持续更新中</small></header>{/key}{/if}
+          {#if heading && route !== "space" && route !== "birthday"}{#key route}<header class="memory-page-header"><div><p>{heading.eyebrow}</p><h1>{heading.title}</h1><span>{heading.description}</span></div><small>我们的生活，持续更新中</small></header>{/key}{/if}
+          {#if route === "home" || route === "space"}<BirthdayEntry />{/if}
           <div hidden={route !== "home"} class="journal-view" data-view="home"><Home /></div>
           <div hidden={route !== "timeline"} class="journal-view" data-view="timeline"><Timeline active={route === "timeline"} /></div>
           <div hidden={route !== "memories"} class="journal-view" data-view="memories"><Memories active={route === "memories"} /></div>
           <div hidden={route !== "map"} class="journal-view" data-view="map"><MapPage active={route === "map"} /></div>
           <div hidden={route !== "space"} class="journal-view" data-view="space"><Space /></div>
+          <Birthday active={route === "birthday"} />
           {#if route === "search"}<Search />{/if}
           {#if route === "detail"}{#key $appLocation.pathname + $appLocation.search}<div class="journal-view" data-view="detail"><Detail /></div>{/key}{/if}
         </main>

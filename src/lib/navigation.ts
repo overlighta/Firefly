@@ -10,7 +10,7 @@ export function routeName(url: URL): string {
   if (path === "/") return "home";
   if (path === "/space/login") return "login";
   if (/^\/memory(?:\/[0-9a-f-]{36})?$/i.test(path)) return "detail";
-  return ({ "/timeline": "timeline", "/memories": "memories", "/map": "map", "/space": "space", "/search": "search" } as Record<string,string>)[path] ?? "missing";
+  return ({ "/timeline": "timeline", "/memories": "memories", "/map": "map", "/space": "space", "/search": "search", "/birthday": "birthday" } as Record<string,string>)[path] ?? "missing";
 }
 
 function closeDialogs(): void {

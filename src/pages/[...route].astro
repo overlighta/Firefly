@@ -1,7 +1,7 @@
 ---
 import Document from "@/components/app/Document.astro";
 export function getStaticPaths() {
-  return [undefined, "timeline", "memories", "map", "space", "space/login", "memory", "search"]
+  return [undefined, "timeline", "memories", "map", "space", "space/login", "memory", "search", "birthday"]
     .map((route) => ({ params: { route } }));
 }
 ---

@@ -9,6 +9,12 @@ export type Json =
 export interface Database {
 	public: {
 		Tables: {
+      birthday_letters: {
+        Row: { id: string; space_id: string; occasion_key: string; sender_id: string; recipient_id: string; recipient_name: string; opens_at: string; body: string; signature: string; is_ready: boolean; opened_at: string | null; updated_at: string };
+        Insert: { id?: string; space_id: string; occasion_key: string; sender_id: string; recipient_id: string; recipient_name: string; opens_at: string; body?: string; signature?: string; is_ready?: boolean; opened_at?: string | null; updated_at?: string };
+        Update: { body?: string; signature?: string; is_ready?: boolean };
+        Relationships: [];
+      };
 			profiles: {
 				Row: {
 					id: string;
@@ -274,6 +280,7 @@ export interface Database {
 		};
 		Views: Record<string, never>;
 		Functions: {
+      open_birthday_letter: { Args: { letter_id: string }; Returns: string };
       create_memory_with_perspective: {
         Args: {p_id: string; p_space_id: string; p_date: string; p_title: string | null; p_location: string | null; p_content: string};
         Returns: Json;

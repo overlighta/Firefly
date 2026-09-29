@@ -6,8 +6,8 @@ try {process.loadEnvFile('.env.local');} catch {}
 function files(dir){return readdirSync(dir,{withFileTypes:true}).flatMap(entry=>entry.isDirectory()?files(join(dir,entry.name)):[join(dir,entry.name)]);}
 const output=files('dist');
 const html=output.filter(file=>file.endsWith('.html')).map(file=>relative('dist',file).replaceAll('\\','/')).sort();
-const expected=['404.html','index.html','map/index.html','memories/index.html','memory/index.html','search/index.html','space/index.html','space/login/index.html','timeline/index.html'].sort();
-assert.deepEqual(html,expected,'Only the nine private application shells may be published');
+const expected=['404.html','index.html','map/index.html','memories/index.html','memory/index.html','search/index.html','space/index.html','space/login/index.html','timeline/index.html','birthday/index.html'].sort();
+assert.deepEqual(html,expected,'Only the private application shells may be published');
 const secrets=Object.entries(process.env).filter(([name,value])=>/^(SUPABASE_SECRET_KEY|SUPABASE_SERVICE_ROLE_KEY|TEST_AUTH_PASSWORD|TEST_PARTNER_PASSWORD)$/.test(name)&&value).map(([,value])=>value);
 let bytes=0,jsGzipBytes=0;
 for(const file of output){
