@@ -34,19 +34,35 @@ async function login(page,partner=false,next='/birthday/'){
   await page.getByRole('button',{name:'保存草稿',exact:true}).click();await page.locator('.birthday-editor__notice').waitFor();
   assert.equal(writes,1);assert.equal(fixture.is_ready,false);
   await page.getByRole('button',{name:'预览惊喜',exact:true}).click();
-  for(const width of [1440,820,390,320]){
-   await page.setViewportSize({width,height:width<500?844:1000});
+  await page.locator('.birthday-friends img').evaluate(async image=>{await image.decode();if(!image.naturalWidth)throw new Error('Birthday illustration failed to load');});
+  await page.locator('.birthday-experience').evaluate(async element=>{await Promise.all(element.getAnimations({subtree:true}).filter(animation=>animation.effect?.getTiming().iterations!==Infinity).map(animation=>animation.finished.catch(()=>{})));});
+  for(const [width,height] of [[1440,1000],[820,1000],[390,844],[375,667],[320,844]]){
+   await page.setViewportSize({width,height});
    assert.ok(await page.evaluate(()=>{const d=document.querySelector('.birthday-dialog');return d.scrollWidth<=d.clientWidth&&document.documentElement.scrollWidth<=innerWidth;}),'no overflow at '+width);
+   if(width<500)assert.ok(await page.locator('.birthday-envelope').evaluate(element=>element.getBoundingClientRect().bottom<=innerHeight),'Mobile envelope is available without scrolling at '+width);
    await page.screenshot({path:`test-results/birthday-envelope-${width}.png`});
   }
   await page.getByRole('button',{name:'拆开这份生日心意',exact:true}).click();
+  await page.locator('.birthday-wish').waitFor();
+  await page.locator('.birthday-wish').evaluate(async element=>{await Promise.all(element.getAnimations({subtree:true}).filter(animation=>animation.effect?.getTiming().iterations!==Infinity).map(animation=>animation.finished.catch(()=>{})));});
   await page.screenshot({path:'test-results/birthday-candle-320.png'});
   await page.getByRole('button',{name:'许好愿了，点灭蜡烛',exact:true}).click();
   await page.locator('.birthday-letter').waitFor();
+  await page.locator('.birthday-reading').evaluate(async element=>{await Promise.all(element.getAnimations({subtree:true}).filter(animation=>animation.effect?.getTiming().iterations!==Infinity).map(animation=>animation.finished.catch(()=>{})));});
   assert.ok((await page.locator('.birthday-letter__body').textContent()).includes('\n\n'),'Letter preserves paragraphs');
   await page.screenshot({path:'test-results/birthday-letter-320.png'});
   assert.equal(receipts,0,'Preview never acknowledges recipient opening');
   await page.getByRole('button',{name:'退出预览',exact:false}).click();
+  // Closing during the candle transition must cancel the pending stage change.
+  await page.getByRole('button',{name:'预览惊喜',exact:true}).click();
+  await page.getByRole('button',{name:'拆开这份生日心意',exact:true}).click();
+  await page.getByRole('button',{name:'许好愿了，点灭蜡烛',exact:true}).click();
+  await page.keyboard.press('Escape');
+  await page.waitForTimeout(750);
+  assert.equal(receipts,0);assert.equal(await page.locator('.birthday-dialog[open]').count(),0);
+  await page.getByRole('button',{name:'预览惊喜',exact:true}).click();
+  await page.locator('.birthday-experience[data-stage="envelope"]').waitFor();
+  await page.keyboard.press('Escape');
   await page.getByRole('button',{name:'准备好了，生日送给她',exact:true}).click();
   await page.locator('.birthday-editor__status.is-ready').waitFor();assert.equal(fixture.is_ready,true);
   await page.getByRole('button',{name:'暂停送出，改为草稿',exact:true}).click();
@@ -76,6 +92,6 @@ async function login(page,partner=false,next='/birthday/'){
   await page.locator('.birthday-entry').click();await page.locator('.birthday-dialog[open]').waitFor();
   await page.keyboard.press('Escape');assert.equal(await page.locator('.birthday-dialog[open]').count(),0);
   assert.deepEqual(errors,[]);
-  console.log('PASS: real author preview, four widths, envelope/candle/letter, paragraph layout, isolated draft/publish/pause, recipient embargo and automatic trigger, dismiss/reopen, read-once and Escape; no production letter writes');
+  console.log('PASS: real author preview, five widths including compact mobile, illustration load, envelope/candle/letter, paragraph layout, isolated draft/publish/pause, recipient embargo and automatic trigger, transition cancellation, dismiss/reopen, read-once and Escape; no production letter writes');
  }finally{await browser.close();}
 })().catch(e=>{console.error(e.stack);process.exitCode=1;});
