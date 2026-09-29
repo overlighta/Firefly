@@ -12,3 +12,6 @@
 
 /images/birthday-companions-v1.webp
   Cache-Control: public, max-age=31536000, immutable
+
+/audio/growing-up-scott-buckley-v1.mp3
+  Cache-Control: public, max-age=31536000, immutable

@@ -1,6 +1,7 @@
 <script lang="ts">
-import { tick, onDestroy } from "svelte";
+import { tick, onMount, onDestroy } from "svelte";
 import type { BirthdayLetter } from "@/lib/birthday";
+import { createBirthdayMusic, type BirthdayMusicState } from "@/lib/birthday-music";
 export let letter: BirthdayLetter;
 export let preview = false;
 export let onRead: () => void = () => {};
@@ -11,10 +12,17 @@ let opening = false;
 let extinguishing = false;
 let disposed = false;
 let timer: ReturnType<typeof setTimeout> | undefined;
+let music: ReturnType<typeof createBirthdayMusic> | undefined;
+let musicState: BirthdayMusicState = "idle";
+$: musicLabel = musicState === "playing" ? "暂停音乐" : musicState === "loading" ? "取消音乐加载" : musicState === "error" ? "重试音乐" : "播放音乐";
+onMount(() => {
+  music = createBirthdayMusic(value => { musicState = value; });
+  return () => music?.dispose();
+});
 onDestroy(() => { disposed = true; clearTimeout(timer); });
 function advance(value: typeof stage) {
   if (opening || extinguishing || disposed) return;
-  if (value === "wish") opening = true;
+  if (value === "wish") { opening = true; music?.start(); }
   else extinguishing = true;
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) void next(value);
   else timer = setTimeout(() => { if (!disposed) void next(value); }, value === "wish" ? 480 : 650);
@@ -22,6 +30,7 @@ function advance(value: typeof stage) {
 async function next(value: typeof stage) {
   if (disposed) return;
   stage = value;
+  if (value !== "envelope") music?.setScene(value);
   opening = false;
   extinguishing = false;
   await tick();
@@ -36,7 +45,10 @@ async function next(value: typeof stage) {
   <header class="birthday-experience__top">
     <span>{preview ? "仅你可见 · 惊喜预览" : "09.30 · 专门留给你的一页"}</span>
     <div class="birthday-chapters" aria-label="生日心意进度"><span class:is-current={stage === "envelope"} aria-current={stage === "envelope" ? "step" : undefined}>相见</span><i aria-hidden="true"></i><span class:is-current={stage === "wish"} aria-current={stage === "wish" ? "step" : undefined}>许愿</span><i aria-hidden="true"></i><span class:is-current={stage === "letter"} aria-current={stage === "letter" ? "step" : undefined}>读信</span></div>
-    <button type="button" on:click={onClose}>{preview ? "退出预览" : "先回手记"} <span aria-hidden="true">×</span></button>
+    <div class="birthday-experience__actions">
+      {#if stage !== "envelope"}<button class="birthday-music" class:is-playing={musicState === "playing"} type="button" aria-label={musicLabel} on:click={() => music?.toggle()}><span class="birthday-music__bars" aria-hidden="true"><i></i><i></i><i></i></span><span>{musicState === "playing" ? "音乐轻放" : musicState === "loading" ? "加载中" : musicState === "error" ? "重试音乐" : musicState === "blocked" ? "轻点播放" : "播放音乐"}</span></button>{/if}
+      <button type="button" on:click={onClose}>{preview ? "退出预览" : "先回手记"} <span aria-hidden="true">×</span></button>
+    </div>
   </header>
   {#if stage === "envelope"}
     <section class="birthday-sealed">
@@ -82,4 +94,5 @@ async function next(value: typeof stage) {
       <div class="birthday-reading__end"><span class="birthday-end-flower" aria-hidden="true">✳</span><p>今天的这一页，永远为你留着。</p><span>{preview ? "这只是预览，不会标记她已读，也不会影响正式惊喜。" : "以后想再读，就到「我们」里，重新打开这封信。"}</span><button type="button" class="birthday-primary" on:click={onClose}>{preview ? "回去继续准备" : "把今天也写进手记"} →</button></div>
     </section>
   {/if}
+  {#if stage !== "envelope"}<p class="birthday-music-credit"><a href="https://www.scottbuckley.com.au/library/growing-up/" target="_blank" rel="noreferrer" title="网页版本已压缩，并加入首尾淡入淡出；完整来源见音乐说明">Growing Up · Scott Buckley</a><span aria-hidden="true"> · </span><a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">CC BY 4.0</a><span aria-hidden="true"> · </span><a href="/audio/credits.txt" target="_blank" rel="noreferrer">音乐说明</a></p>{/if}
 </div>

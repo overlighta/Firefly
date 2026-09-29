@@ -12,6 +12,19 @@ body:has(.birthday-dialog[open]) { overflow: hidden; }
 .birthday-experience__top > span { font-size: 10px; letter-spacing: .08em; color: #80745e; }
 .birthday-experience__top button { display: flex; gap: 12px; align-items: center; min-height: 40px; padding: 5px 0 5px 12px; flex-shrink: 0; border: 0; background: transparent; color: #78684f; font-size: 12px; }
 .birthday-experience__top button > span { font-size: 20px; }
+.birthday-experience__actions { display: flex; align-items: center; gap: 16px; }
+.birthday-experience__top .birthday-music { gap: 8px; min-height: 44px; padding: 5px 0; color: #697954; }
+.birthday-experience__top .birthday-music > span { font-size: 11px; }
+.birthday-music__bars { display: flex; align-items: center; gap: 3px; height: 18px; width: 15px; }
+.birthday-music__bars i { height: 5px; width: 2px; background: currentColor; border-radius: 2px; }
+.birthday-music__bars i:nth-child(2) { height: 13px; }
+.birthday-music__bars i:nth-child(3) { height: 8px; }
+.birthday-music.is-playing i { animation: birthday-music-wave 1.7s ease-in-out infinite alternate; }
+.birthday-music.is-playing i:nth-child(2) { animation-delay: -.5s; }
+.birthday-music.is-playing i:nth-child(3) { animation-delay: -.9s; }
+.birthday-music-credit { margin: 0; padding: 12px 20px calc(20px + env(safe-area-inset-bottom)); color: #8b806e; font-size: 9px; line-height: 1.8; text-align: center; }
+.birthday-music-credit a { color: inherit; text-decoration: none; }
+.birthday-music-credit a:hover { text-decoration: underline; }
 .birthday-chapters { display: flex; align-items: center; gap: 10px; font-size: 10px; color: #9b937f; }
 .birthday-chapters i { width: 22px; height: 1px; background: #c8c7b5; }
 .birthday-chapters .is-current { color: #596d50; }
@@ -119,6 +132,7 @@ body:has(.birthday-dialog[open]) { overflow: hidden; }
 .birthday-editor__back { display: inline-block; margin-top: 28px; padding: 10px 0; font-size: 12px; color: #919375; text-decoration: none; }
 
 @keyframes birthday-flame { from { transform: rotate(-4deg) scale(.95,1); } to { transform: rotate(5deg) scale(1,.95); } }
+@keyframes birthday-music-wave { from { transform: scaleY(.55); } to { transform: scaleY(1.2); } }
 @keyframes birthday-glow { from { opacity: .6; transform: scale(.95); } to { opacity: 1; transform: scale(1.06); } }
 @keyframes birthday-unfold { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes birthday-extinguish { to { opacity: 0; transform: scale(.2,.65) rotate(20deg); } }
@@ -140,6 +154,7 @@ body:has(.birthday-dialog[open]) { overflow: hidden; }
   .birthday-experience__top { padding: calc(8px + env(safe-area-inset-top)) 20px 8px; }
   .birthday-experience__top > span { max-width: 65%; font-size: 9px; line-height: 1.8; }
   .birthday-chapters { display: none; }
+  .birthday-experience__actions { gap: 11px; }
   .birthday-sealed { grid-template-columns: minmax(0,1fr); grid-template-areas: 'copy' 'friends' 'delivery'; gap: 20px; min-height: calc(100dvh - 57px - env(safe-area-inset-top)); padding: 28px 24px calc(26px + env(safe-area-inset-bottom)); text-align: center; }
   .birthday-welcome-copy { position: relative; }
   .birthday-dateline { justify-content: center; gap: 16px; }

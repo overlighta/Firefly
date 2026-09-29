@@ -24,7 +24,19 @@
 - 新增一个静态 `/birthday/` 页面。玩偶合影是由用户提供的三张照片生成的透明线条插画，网页使用约 182 KiB 的 WebP，仅进入惊喜开场时加载。无新服务、录音、麦克风权限或持续付费资源。原始照片不进入仓库或部署目录。
 - 插画原稿与生成说明位于 `docs/design/birthday-companions-v1.png` 和 `docs/design/birthday-illustration.md`；网站资产为 `public/images/birthday-companions-v1.webp`。不在静态资产中写入生日信或账号信息。
 
-## 验证
+## 生日钢琴伴奏
+
+- 曲目为 Scott Buckley 的 [Growing Up](https://www.scottbuckley.com.au/library/growing-up/)，舒缓钢琴独奏，完整曲长约 1 分 55 秒。作者以 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) 授权署名使用。页面保留曲名、作者与许可证链接；完整来源及加工说明在 `public/audio/credits.txt`。
+- 网站自托管 `public/audio/growing-up-scott-buckley-v1.mp3`（96 kbps，约 1.32 MiB），原下载仅用于本地处理，不需要外部播放器、第三方播放请求或新增付费服务。音频进入拆信交互才加载，版本文件长期缓存。
+- 点击拆信时启动音频与 AudioContext，保持增益为零；蜡烛出现后用 2.8 秒渐入到 32% 音量。进入生日信时用 2.2 秒降至 19%。暂停用 0.65 秒淡出，退出惊喜用 0.85 秒淡出后释放播放器。曲目首尾另有轻微淡入淡出，用于自然循环。
+- 页头可暂停/恢复，取消未完成的加载，播放失败或浏览器拦截时可点击重试；不影响继续读信。切入后台时淡出暂停，回来可手动恢复。重新预览会结束上一次的播放器，避免声音叠加。
+- 减少动态效果设置仅减少视觉动画，保留声音淡入淡出。预览和正式惊喜使用同一播放逻辑，音乐不操作生日信或已读状态。
+
+## 验证音乐
+
+- `node scripts/birthday-music-regression.cjs`：检查真实 MP3 解码、交互前不请求音频、零音量开始、渐入与读信降音量、暂停/恢复、Escape 关闭淡出、快速重开不叠加、后台暂停和播放受阻/请求失败时的恢复。
+
+## 整体流程验证
 
 - `node scripts/audit-birthday.mjs`：只为独立随机 occasion 创建临时权限测试行，验证未来已启用信不可提前读取、到期信可读、匿名拒绝、作者编辑、受保护的已读列和幂等打开；最终只清理测试行，不更新正式生日信。
 - `node scripts/birthday-regression.cjs`：真实作者读取与预览；后续保存/启用/暂停/接收人开启全部使用拦截响应，不写正式内容。覆盖 1440、820、390、375、320 五种宽度（包含 375 × 667 小屏）、插画解码、手机首屏拆信入口、原文分段、截止前隐藏、已登录页面解锁、关闭后重看、已读不再自动弹出、过渡中关闭、Escape 与退出清除。`TEST_MOTION=normal` 验证正常动画，默认验证减少动态效果模式。
